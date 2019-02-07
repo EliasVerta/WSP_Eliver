@@ -1,58 +1,41 @@
 <?php
+//we define all the specifics of the webbserver that we use from phpmyadmin
+$host = 'localhost';
+$dbname = 'lab3';
+$user = 'Admin';
+$password = 'meme';
 
-//Simple array for topics - Övning 4
-//$model = array(
-//    'Första inlägget' ,
-//    'Snart är det vår' ,
-//    'Robin presenterar sig' ,
-//    'Senaste inlägget'
-//);
-//Nyclar för 2D
-// Slug
-// title
-//author
-//date
-//text
+//Define variable with attributes for our PDO-object
+$attr = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC );
+//creates a variable called dsn that defines the swebbserver settings that are used in pdo
+$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
+//Create our new pdo object
+$pdo = new PDO($dsn, $user, $password, $attr);
 
+//Tests our connection
+if ($pdo) {
 
-//2D Associative array for full posts - Övning 9
-$model = array(
-  'forsta-inlagget' => array(
-    'title' => 'Första inlägget',
-    'author' => 'Gugge',
-    'date' => '2015-01-01',
-    'text' => 'Här kommer det första inlägget i sin helhet. Välkommen till Labb 3! Här övar vi på PHP för att bli duktiga webbserverprogrammerare'
-  ),
-  'snart-ar-det-var' => array(
-      'title' => 'Snart är det vår',
-      'author' => 'Gugge',
-      'date' => '2015-02-24',
-      'text' => 'Snart är det vår! Då övar vi på PHP för att bli duktiga webbserverprogrammerare.'
-  ),
-  'robin-presenterar-sig' => array(
-      'title' => 'Robin presenterar sig',
-      'author' => 'Robin',
-      'date' => '2015-02-25',
-      'text' => 'Robin är en trevlig prick som gärna övar på PHP för att som du bli en duktig webbserverprogrammerare.'
-  ),
-  'senaste-inlagget' => array(
-      'title' => 'Senaste inlägget',
-      'author' => 'Robin',
-      'date' => '2015-02-26',
-      'text' => 'Här kommer senaste inlägget i sin helhet. Här övar vi på PHP för att bli duktiga webbserverprogrammerare. Detta är tredje labben och andra labben i en serie labbar som tillsammans bygger ihop detta projekt. Ett enkelt PHP-projekt men väl strukturerat och genomtänkt konstruerat.'
-  )
-);
+//creates a variable called sql and fills it with the info we need from the webbserver
+$sql = "SELECT p.Slug, p.Headline, u.Username, p.Creation_time, p.Text FROM posts AS p JOIN users AS u ON p.User_ID = u.ID ORDER BY Creation_time DESC";
 
-// echo $model ['1']['title'];
-// echo '<br>';
-// echo '<pre>';
-// print_r($model);
-// echo '</pre>';
-// echo '<br>';
+    //define $model array
+    $model = array();
 
+// Fill our pre defined $model-array
+    foreach($pdo->query($sql) as $row) {
+        $model += array(
+            $row['Slug'] => array(
+                'title' => $row['Headline'],
+                'author' => $row['Username'],
+                'date' => $row['Creation_time'],
+                'text' => $row['Text']
+            )
+        );
+    }
+}
+// error message
+else {
+    print_r($pdo->errorInfo());
+}
 
-
-
-
-
-//2D Associative array for full posts - Övning 9
+?>

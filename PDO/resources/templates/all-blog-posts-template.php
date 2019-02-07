@@ -18,7 +18,7 @@ foreach ($model as $key => $value) {
         <h3><?php echo $value['title'];  ?></h3>
         <p class="author">Författare: <?php echo $value['author'];  ?></p>
         <p class="date">Datum: <?php echo $value['date'];  ?></p>
-        <p class="message">Här kommer själva inlägget men inte i sin helhet... <a href="index.php?page=blogg&post=<?php echo $key;  ?>">Läs mer</a></p>
+        <p class="message"><?php echo $value ['text'] ; ?> <a href="index.php?page=blogg&post=<?php echo $key;  ?>">Läs mer</a></p>
     </div>
 <?php
 }
